@@ -185,29 +185,67 @@ function generatePrice($minPrice, $maxPrice){
     );
     $key = array_rand($decimalsArray);
     $pDecimal = $decimalsArray[$key];
-    return strval($pPrice . $pDecimal);
+    return intval($pPrice . $pDecimal);
 }
 
+/* Generate Names, Categories, Subcategories, Attributes */
 function generateNames($theme){
     /** Name - Category - Subcategory */
     $listNames = array();
+    $listAttr = array();
+    $attrValues = array();
     if($theme == "alimentation"){
         /* Refer to /data */
         include "data/alimentation/specs.php";
+        include "data/alimentation/attr.php";
     }
     elseif ($theme == "vetements"){
         /* Refer to /data  */
         include "data/vetements/specs.php";
+        include "data/vetements/attr.php";
     }
     elseif ($theme == "bijoux"){
         /* Refer to /data  */
         include "data/bijoux/specs.php";
+        include "data/bijoux/attr.php";
     }
+    // Names and categories
     $key = array_rand($listNames);
     $pNames = $listNames[$key]["Name"];
     isset($_POST["generatecategories"]) ? $pCategories = $listNames[$key]["Category"] : $pCategories = NULL;
     isset($_POST["generatesubcategories"]) ? $pSubCategories = " > " . $listNames[$key]["Subcategory"] : $pSubCategories = NULL;
-    $arrayProduct = array("pName" => $pNames, "pCategory" => $pCategories, "pSubCategory" => $pSubCategories);
+
+    // Images
+    $input = $listNames[$key]["Images"];
+    $rand_keys = array_rand($input, 4);
+    $pImagesGallery = NULL;
+    for($i = 0; $i <= 3; $i++){
+        if($i == 3){
+            $pImagesGallery .= $input[$rand_keys[$i]] . '.jpg';
+        }
+        else {
+            $pImagesGallery .= $input[$rand_keys[$i]] . '.jpg, ';
+        }
+    }
+
+    // Attributes
+    $keyAttr = array_rand($listAttr);
+    $pAttrName = $listAttr[$keyAttr]["AttrName"];
+
+    $pAttrValues = $listAttr[$keyAttr]["AttrValues"];
+    shuffle($pAttrValues);
+    $pAttrValue = NULL;
+
+    for($i = 0; $i < 5; $i++){
+        if($i == 4){
+            $pAttrValue .= $pAttrValues[$i];
+        }
+        else {
+            $pAttrValue .= $pAttrValues[$i] . ', ';
+        }
+    }
+
+    $arrayProduct = array("pName" => $pNames, "pCategory" => $pCategories, "pSubCategory" => $pSubCategories, "pAttrName" => $pAttrName, "pAttrValue" => $pAttrValue, "pAttrNameTwo" => $pAttrNameTwo, "pImagesGallery" => $pImagesGallery);
     return $arrayProduct;
 }
 
@@ -305,7 +343,18 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
 
     for($i = 1; $i <= $limit; $i++){
 
-        // Random product name with its associated category
+        // Product price
+        $regularPrice = generatePrice($minPrice, $maxPrice);
+        $saleArray = array(0, 0, 0, 1);
+        $randSale = array_rand($saleArray);
+        if(isset($_POST["generatesaleprice"]) && $randSale == 1){
+            $salePrice = number_format($regularPrice - (($regularPrice * 15) / 100), 2);
+        }
+        else{
+            $salePrice = NULL;
+        }
+
+        // Random product name with its associated category and attributes
         $product = generateNames($pTheme);
 
         // Generate Collections names ?
@@ -335,13 +384,37 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
             "Height (in)" => utf8_encode(generateDimensions($pDimensions)),
             "Allow customer reviews?" => generateAllowedComments($pComments),
             "Purchase note" => NULL,
-            "Sale price" => NULL,
-            "Regular price" => utf8_encode(generatePrice($minPrice, $maxPrice)),
-            "Categories" => $product["pCategory"] . $product["pSubCategory"]
+            "Sale price" => $salePrice,
+            "Regular price" => utf8_encode($regularPrice),
+            "Categories" => $product["pCategory"] . $product["pSubCategory"],
+            "Tags" => NULL,
+            "Shipping class" =>  NULL,
+            "Images" => $product["pImagesGallery"],
+            "Download limit" => NULL,
+            "Download expiry days" => NULL,
+            "Parent" => NULL,
+            "Grouped products" => NULL,
+            "Upsells" => NULL,
+            "Cross-sells" => NULL,
+            "External URL" => NULL,
+            "Button text" => NULL,
+            "Position" => "0",
+            "Attribute 1 name" => $product["pAttrName"],
+            "Attribute 1 value(s)" => $product["pAttrValue"],
+            "Attribute 1 visible" => "1",
+            "Attribute 1 global" => "1",
+            "Attribute 2 name" => $product["pAttrName"],
+            "Attribute 2 value(s)" => $product["pAttrValue"],
+            "Attribute 2 visible" => "1",
+            "Attribute 2 global" => "1",
+            "Meta: _wpcom_is_markdown" => "1",
+            "Download 1 name" => NULL,
+            "Download 1 URL" => NULL,
+            "Download 2 name" => NULL,
+            "Download 2 URL" => NULL
         );
     }
     // arrayToJson($array);
     // jsonToCSV("results.json", "products.csv");
     return $array;
-
 }
