@@ -189,7 +189,7 @@ function generatePrice($minPrice, $maxPrice){
 }
 
 /* Generate Names, Categories, Subcategories, Attributes */
-function generateNames($theme){
+function generateNames($theme, $attributes, $subattributes){
     /** Name - Category - Subcategory */
     $listNames = array();
     $listAttr = array();
@@ -235,9 +235,46 @@ function generateNames($theme){
     $pAttrValues = $listAttr[$keyAttr]["AttrValues"];
     shuffle($pAttrValues);
     $pAttrValue = NULL;
+    $pAttrValueTwo = NULL;
 
-    for($i = 0; $i < 5; $i++){
-        if($i == 4){
+    // Find already given attribute so next attribute will be different
+    $givenAttrName = array_search($listAttr[$keyAttr], $listAttr);
+    if (($givenAttrName >= 0 && $givenAttrName <= 3 && $attributes == 2)){
+        $pAttrNameTwo = $listAttr[$keyAttr + 1]["AttrName"];
+        $pAttrValuesTwo = $listAttr[$keyAttr + 1]["AttrValues"];
+        shuffle($pAttrValuesTwo);
+        // Lists all attributes values
+        for($i = 0; $i < $subattributes; $i++){
+            if($i == $subattributes - 1){
+                $pAttrValueTwo .= $pAttrValuesTwo[$i];
+            }
+            else {
+                $pAttrValueTwo .= $pAttrValuesTwo[$i] . ', ';
+            }
+        }
+    }
+    elseif ($givenAttrName == 4 && $attributes == 2){
+        $pAttrNameTwo = $listAttr[$keyAttr - 1]["AttrName"];
+        $pAttrValuesTwo = $listAttr[$keyAttr - 1]["AttrValues"];
+        shuffle($pAttrValuesTwo);
+        for($i = 0; $i < $subattributes; $i++){
+            if($i == $subattributes - 1){
+                $pAttrValueTwo .= $pAttrValuesTwo[$i];
+            }
+            else {
+                $pAttrValueTwo .= $pAttrValuesTwo[$i] . ', ';
+            }
+        }
+    }
+    else {
+        $pAttrNameTwo = NULL;
+        $pAttrValueTwo = NULL;
+    }
+
+
+    // Lists all attributes values
+    for($i = 0; $i < $subattributes; $i++){
+        if($i == $subattributes - 1){
             $pAttrValue .= $pAttrValues[$i];
         }
         else {
@@ -245,7 +282,7 @@ function generateNames($theme){
         }
     }
 
-    $arrayProduct = array("pName" => $pNames, "pCategory" => $pCategories, "pSubCategory" => $pSubCategories, "pAttrName" => $pAttrName, "pAttrValue" => $pAttrValue, "pAttrNameTwo" => $pAttrNameTwo, "pImagesGallery" => $pImagesGallery);
+    $arrayProduct = array("pName" => $pNames, "pCategory" => $pCategories, "pSubCategory" => $pSubCategories, "pAttrName" => $pAttrName, "pAttrValue" => $pAttrValue, "pAttrNameTwo" => $pAttrNameTwo, "pAttrValueTwo" => $pAttrValueTwo, "pImagesGallery" => $pImagesGallery);
     return $arrayProduct;
 }
 
@@ -339,7 +376,7 @@ function generateCategories($theme){
     return $pCategories;
 }
 
-function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $pComments, $minPrice, $maxPrice, $limit){
+function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $pComments, $minPrice, $maxPrice, $attributes, $subattributes, $limit){
 
     for($i = 1; $i <= $limit; $i++){
 
@@ -355,7 +392,7 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
         }
 
         // Random product name with its associated category and attributes
-        $product = generateNames($pTheme);
+        $product = generateNames($pTheme, $attributes, $subattributes);
 
         // Generate Collections names ?
         isset($_POST["generatecollections"]) ? $generateCollections = " « " . generateProductCollection(6) . " »" : $generateCollections = NULL;
@@ -403,8 +440,8 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
             "Attribute 1 value(s)" => $product["pAttrValue"],
             "Attribute 1 visible" => "1",
             "Attribute 1 global" => "1",
-            "Attribute 2 name" => $product["pAttrName"],
-            "Attribute 2 value(s)" => $product["pAttrValue"],
+            "Attribute 2 name" => $product["pAttrNameTwo"],
+            "Attribute 2 value(s)" => $product["pAttrValueTwo"],
             "Attribute 2 visible" => "1",
             "Attribute 2 global" => "1",
             "Meta: _wpcom_is_markdown" => "1",

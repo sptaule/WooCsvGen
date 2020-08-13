@@ -240,16 +240,16 @@ h2{
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 150px repeat(2, 1fr);
   gap: 10px 10px;
-  grid-template-areas: "Logo Logo Logo Theme" "Type Visibility Stock Dimensions" "Commentaires Prix Categories Attributs" "Qty Btn . .";
+  grid-template-areas: "Logo Logo Logo Theme" "Type Visibility Stock Dimensions" "Commentaires Prix Categories Attributs" "Gallery Qty Btn .";
 }
 
 @media screen and (max-width: 1120px){
     .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 150px repeat(5, 1fr);
+    grid-template-rows: 150px repeat(6, 1fr);
     gap: 10px 10px;
-    grid-template-areas: "Logo Theme" "Type Visibility" "Stock Dimensions" "Commentaires Prix" "Categories Attributs" "Qty Btn";
+    grid-template-areas: "Logo Theme" "Type Visibility" "Stock Dimensions" "Commentaires Prix" "Categories Attributs" "Gallery Qty" "Btn .";
     }
 }
 
@@ -293,6 +293,8 @@ h2{
 .Categories { grid-area: Categories; }
 
 .Attributs { grid-area: Attributs; }
+
+.Gallery { grid-area: Gallery; }
 
 .Qty { grid-area: Qty; }
 

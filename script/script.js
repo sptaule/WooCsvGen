@@ -68,6 +68,18 @@ $("#range-attr-2").rangeslider({
     }
 });
 // Quantité
+$("#range-imagecount").rangeslider({
+    polyfill: false,
+    onInit: function(position, value){
+        $("#range-imagecount").attr("value", value);
+        $(".imagecountvalue").text(value);
+    },
+    onSlide: function(position, value){
+        $("#range-imagecount").attr("value", value);
+        $(".imagecountvalue").text(value);
+    }
+});
+// Quantité
 $("#range-qty").rangeslider({
     polyfill: false,
     onInit: function(position, value){

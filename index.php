@@ -17,8 +17,9 @@ if(isset($_POST["generate"])){
 	$maxprice = htmlspecialchars($_POST["maxprice"]);
 	$attributes = htmlspecialchars($_POST["attributs"]);
 	$subattributes = htmlspecialchars($_POST["sousattributs"]);
+	$imagecount = htmlspecialchars($_POST["imagecount"]);
 	$qty = htmlspecialchars($_POST["productqty"]);
-    var_dump(globalGenerate($theme, $type, $visibility, $stock, $dimensions, $comments, $minprice, $maxprice, $qty));
+    var_dump(globalGenerate($theme, $type, $visibility, $stock, $dimensions, $comments, $minprice, $maxprice, $attributes, $subattributes, $qty));
 }
 
 ?>
@@ -202,13 +203,22 @@ if(isset($_POST["generate"])){
 			  <div class="Attributs">
 			  	<section>
 					<h2>Attributs</h2>
-					<input id="range-attr-1" type="range" min="0" max="5" step="1" value="0" name="attributs">
-					<span class="pricevalue attrvalue">0</span>
+					<input id="range-attr-1" type="range" min="0" max="2" step="1" value="1" name="attributs">
+					<span class="pricevalue attrvalue">1</span>
 					<h2>Valeurs</h2>
-					<input id="range-attr-2" type="range" min="0" max="5" step="1" value="0" name="sousattributs">
-					<span class="pricevalue subattrvalue">0</span>
+					<input id="range-attr-2" type="range" min="0" max="5" step="1" value="3" name="sousattributs">
+					<span class="pricevalue subattrvalue">3</span>
 				</section>
 			  </div>
+
+                <div class="Gallery">
+                    <section>
+                        <h2>Images des produits</h2>
+                        <span class="container-checkbox" style="padding-left: 0;">Nombre de photos par produit</span>
+                        <input id="range-imagecount" type="range" min="0" max="4" step="1" value="2" name="imagecount">
+                        <span class="imagecountvalue pricevalue subattrvalue">2</span>
+                    </section>
+                </div>
 
 			  <div class="Qty">
 			  	<section>
