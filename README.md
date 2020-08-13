@@ -38,7 +38,7 @@ CSV products generator for WooCommerce
   * Minimum price (from 5 to 50€)
   * Maximum price (from 50 to 1000€)
   * _Generate saleprice randomly_
-* __Select the categories __
+* __Select the categories__
   * _Check if you want categories applied to your products_
   * _Check if you want subcategories applied to your products_
 * __Select the number of attributes per product__
