@@ -2,17 +2,17 @@
 
 $listNames = array(
     array(
-        "Name" => "Chevalière",
+        "Name" => "Chevalière ovale",
         "Category" => "Bijoux homme",
         "Subcategory" => "Acier"
     ),
     array(
-        "Name" => "Chevalière",
+        "Name" => "Chevalière carrée",
         "Category" => "Bijoux homme",
         "Subcategory" => "Argent"
     ),
     array(
-        "Name" => "Chevalière",
+        "Name" => "Chevalière rectangle",
         "Category" => "Bijoux homme",
         "Subcategory" => "Or"
     ),
@@ -32,9 +32,19 @@ $listNames = array(
         "Subcategory" => "Or"
     ),
     array(
-        "Name" => "Bracelet",
+        "Name" => "Bracelet en mailles",
         "Category" => "Bijoux homme",
         "Subcategory" => "Acier"
+    ),
+    array(
+        "Name" => "Bracelet croix",
+        "Category" => "Bijoux homme",
+        "Subcategory" => "Argent"
+    ),
+    array(
+        "Name" => "Bracelet marin",
+        "Category" => "Bijoux homme",
+        "Subcategory" => "Or"
     ),
     array(
         "Name" => "Collier",

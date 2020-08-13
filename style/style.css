@@ -47,6 +47,12 @@ h2{
   filter: brightness(1.15);
 }
 
+.submit-button{
+  font-weight: bolder !important;
+  font-size: 1.15em !important;
+  text-shadow: 0 0 30px #1f1c2c !important;
+}
+
 /* The container */
 .container {
   display: block;

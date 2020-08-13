@@ -15,8 +15,6 @@ if(isset($_POST["generate"])){
 	$comments = htmlspecialchars($_POST["productcomments"]);
 	$minprice = htmlspecialchars($_POST["minprice"]);
 	$maxprice = htmlspecialchars($_POST["maxprice"]);
-	$categories = htmlspecialchars($_POST["categories"]);
-	$subcategories = htmlspecialchars($_POST["souscategories"]);
 	$attributes = htmlspecialchars($_POST["attributs"]);
 	$subattributes = htmlspecialchars($_POST["sousattributs"]);
 	$qty = htmlspecialchars($_POST["productqty"]);
@@ -180,21 +178,25 @@ if(isset($_POST["generate"])){
 			  <div class="Categories">
 			  	<section>
 					<h2>Catégories</h2>
-					<input id="range-cat-1" type="range" min="1" max="15" step="1" value="1" name="categories">
-					<span class="pricevalue catvalue">1</span>
+                    <label class="container-checkbox">Générer des catégories
+                        <input type="checkbox" checked="checked" name="generatecategories">
+                        <span class="checkmark-box"></span>
+                    </label>
 					<h2>Sous-catégories</h2>
-					<input id="range-cat-2" type="range" min="0" max="15" step="1" value="0" name="souscategories">
-					<span class="pricevalue subcatvalue">0</span>
+                    <label class="container-checkbox">Générer des sous-catégories
+                        <input type="checkbox" name="generatesubcategories">
+                        <span class="checkmark-box"></span>
+                    </label>
 				</section>
 			  </div>
 
 			  <div class="Attributs">
 			  	<section>
 					<h2>Attributs</h2>
-					<input id="range-attr-1" type="range" min="0" max="10" step="1" value="0" name="attributs">
+					<input id="range-attr-1" type="range" min="0" max="5" step="1" value="0" name="attributs">
 					<span class="pricevalue attrvalue">0</span>
 					<h2>Valeurs</h2>
-					<input id="range-attr-2" type="range" min="0" max="10" step="1" value="0" name="sousattributs">
+					<input id="range-attr-2" type="range" min="0" max="5" step="1" value="0" name="sousattributs">
 					<span class="pricevalue subattrvalue">0</span>
 				</section>
 			  </div>
@@ -209,7 +211,7 @@ if(isset($_POST["generate"])){
 
 			  <div class="Btn">
 				  	<div class="control">
-						<input type="submit" class="button is-primary" name="generate" value="Générer mon .csv">
+						<input type="submit" class="submit-button button is-primary" name="generate" value="Générer mon .csv">
 					</div>
 			  </div>
 

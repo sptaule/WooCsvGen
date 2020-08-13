@@ -192,65 +192,23 @@ function generateNames($theme){
     /** Name - Category - Subcategory */
     $listNames = array();
     if($theme == "alimentation"){
-        $listNames = array(
-            array("Sirop de grenadine", "Sirops"),
-            array("Sirop de menthe", "Sirops"),
-            array("Sirop de myrtille", "Sirops"),
-            array("Soda artisanal aux agrumes", "Boissons sucrées"),
-            array("Soda à la fraise allégé en sucre", "Boissons sucrées"),
-            array("Vin rouge", "Alcools"),
-            array("Vin blanc", "Alcools"),
-            array("Vin rosé", "Alcools"),
-            array("Champagne", "Alcools"),
-            array("Cidre", "Alcools"),
-            array("Bière", "Alcools"),
-            array("Liqueur de mirabelles", "Alcools"),
-            array("Eau de vie", "Alcools"),
-            array("Hydromel au cassis", "Alcools"),
-            array("Thé à la canneberge", "Thés")
-        );
+        /* Refer to /data */
+        include "data/alimentation/specs.php";
     }
     elseif ($theme == "vetements"){
-        $listNames = array(
-            "Chaussettes d'été",
-            "Chaussettes d'hiver",
-            "Combinaison en coton",
-            "T-shirt col en V",
-            "T-Shirt manches longues",
-            "Débardeur en polyester",
-            "Robe de chambre",
-            "Chaussures de ville",
-            "Bottines en jute",
-            "Caleçon en lin",
-            "Culotte en sisal",
-            "Pantalon en chanvre",
-            "Jupe en velour côtelé",
-            "Chemise en toile",
-            "Bonnet d'hiver"
-        );
+        /* Refer to /data  */
+        include "data/vetements/specs.php";
     }
     elseif ($theme == "bijoux"){
-        $listNames = array(
-            "Chevalière",
-            "Bague",
-            "Bracelet",
-            "Collier",
-            "Chaîne",
-            "Pendentif",
-            "Boucles d'oreilles",
-            "Diadème",
-            "Serre-tête",
-            "Collier ras du cou",
-            "Montre",
-            "Piercing",
-            "Chaîne de cheville",
-            "Épingle à cheveux",
-            "Bouton de manchette"
-        );
+        /* Refer to /data  */
+        include "data/bijoux/specs.php";
     }
     $key = array_rand($listNames);
-    $pNames = $listNames[$key];
-    return array("pdtName" => $pNames[0], "pdtCategory" => $pNames[1]);
+    $pNames = $listNames[$key]["Name"];
+    isset($_POST["generatecategories"]) ? $pCategories = $listNames[$key]["Category"] : $pCategories = NULL;
+    isset($_POST["generatesubcategories"]) ? $pSubCategories = " > " . $listNames[$key]["Subcategory"] : $pSubCategories = NULL;
+    $arrayProduct = array("pName" => $pNames, "pCategory" => $pCategories, "pSubCategory" => $pSubCategories);
+    return $arrayProduct;
 }
 
 function generateCategories($theme){
@@ -346,11 +304,18 @@ function generateCategories($theme){
 function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $pComments, $minPrice, $maxPrice, $limit){
 
     for($i = 1; $i <= $limit; $i++){
+
+        // Random product name with its associated category
+        $product = generateNames($pTheme);
+
+        // Generate Collections names ?
+        isset($_POST["generatecollections"]) ? $generateCollections = " « " . generateProductCollection(6) . " »" : $generateCollections = NULL;
+
         $array[] = array(
             "ID" => "$i",
             "Type" => utf8_encode(generateType($pType)),
             "SKU" => utf8_encode(generateSku()),
-            "Name" =>  generateNames($pTheme) . " " . generateProductCollection(6),
+            "Name" =>  $product["pName"] . $generateCollections,
             "Published" => "1",
             "Is featured?" => "0",
             "Visibility in catalog" => utf8_encode(generateVisibility($pVisibility)),
@@ -372,7 +337,7 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
             "Purchase note" => NULL,
             "Sale price" => NULL,
             "Regular price" => utf8_encode(generatePrice($minPrice, $maxPrice)),
-            "Categories" => generateCategories($pTheme)
+            "Categories" => $product["pCategory"] . $product["pSubCategory"]
         );
     }
     // arrayToJson($array);
