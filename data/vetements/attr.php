@@ -4,7 +4,7 @@ $listAttr =
     array(
         array(
             "AttrName" => "Couleur",
-            array(
+            "AttrValues" => array(
                 "Noir",
                 "Blanc",
                 "Jaune",
@@ -14,7 +14,7 @@ $listAttr =
         ),
         array(
             "AttrName" => "Taille",
-            array(
+            "AttrValues" => array(
                 "XS",
                 "S",
                 "M",
@@ -24,7 +24,7 @@ $listAttr =
         ),
         array(
             "AttrName" => "Matière",
-            array(
+            "AttrValues" => array(
                 "Lin",
                 "Coton",
                 "Chanvre",
@@ -34,7 +34,7 @@ $listAttr =
         ),
         array(
             "AttrName" => "Provenance",
-            array(
+            "AttrValues" => array(
                 "France",
                 "Espagne",
                 "Russie",
@@ -44,7 +44,7 @@ $listAttr =
         ),
         array(
             "AttrName" => "Label",
-            array(
+            "AttrValues" => array(
                 "GOTS",
                 "Ecocert",
                 "Oëko Tex",
