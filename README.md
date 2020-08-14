@@ -42,5 +42,7 @@ CSV products generator for WooCommerce
   * _Check if you want categories applied to your products_
   * _Check if you want subcategories applied to your products_
 * __Select the number of attributes per product__
+ * Number of attributes (between 0 and 2)
+ * Values per attributes (between 0 and 5)
 * __Select the amount of products to generate__
   * _From 10 to 150_
