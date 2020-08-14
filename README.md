@@ -18,7 +18,6 @@ CSV products generator for WooCommerce
   
 * __Select the desired type__
   * Simple
-  * Simple and variable
   * _Generate collection names (advised)_
   
 * __Select the visibility__
