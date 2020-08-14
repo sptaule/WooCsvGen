@@ -7,6 +7,8 @@ CSV products generator for WooCommerce
 
 ![screenshot](https://i.imgur.com/0wD4iqB.jpg)
 
+---
+
 ### How to use
 
 * __Select a theme__
