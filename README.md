@@ -1,7 +1,7 @@
 # WooCsvGen
 CSV products generator for WooCommerce
 
-> Generate a sample of products for WooCommerce, according the theme of your choice, and get a CSV file ready to import.
+> Generate a sample of products for WooCommerce, according to the theme of your choice, and get a CSV file ready to import.
 
 **Supported languages** : French
 
