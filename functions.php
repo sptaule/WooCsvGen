@@ -1,15 +1,7 @@
 <?php
 
-function dbConn(){
-    global $pdo;
-    $pdo = new PDO('mysql:dbname=csvphp;host=localhost', 'root', '');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-    $pdo->exec("SET CHARACTER SET utf8");
-}
-
-function arrayToJson($array){
-    $fp = fopen('results.json', 'w');
+function arrayToJson($array, $instance){
+    $fp = fopen('results-' . $instance . '.json', 'w');
     fwrite($fp, json_encode($array, JSON_UNESCAPED_UNICODE));
     fclose($fp);
 }
@@ -32,7 +24,19 @@ function jsonToCSV($jfilename, $cfilename)
         fputcsv($fp, array_merge($header, $row));
     }
     fclose($fp);
+    unlink($jfilename);
     return;
+}
+
+function stripBadChars($string){
+    $unwanted_array = array(
+        'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+        'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+        'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+        'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+        'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', ' ' => '-', '+' => '-plus'
+    );
+    return strtr($string, $unwanted_array);
 }
 
 function generateProductCollection($length){  
@@ -61,6 +65,8 @@ function generateType($type){
     elseif ($type == "simplevariable"){
         $listTypes = array(
             "simple",
+            "simple",
+            "simple",
             "variable"
         );
         $key = array_rand($listTypes);
@@ -70,9 +76,23 @@ function generateType($type){
     return NULL;
 }
 
-function generateSku(){
-    $sku = 'PDT' . rand(1000, 9999);
-    return $sku;
+function generateSku($pName){
+    // Replace all accented characters
+    $unwanted_array = array(
+        'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+        'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+        'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+        'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+        'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y'
+    );
+
+    $words = explode(" ", strtr($pName, $unwanted_array));
+    $acronym = "";
+
+    foreach ($words as $word) {
+        $acronym .= strtoupper($word[0]);
+    }
+    return $acronym . mt_rand(1000, 9999);
 }
 
 function generateVisibility($visibility){
@@ -102,7 +122,7 @@ function generateShortDescription(){
 }
 
 function generateDescription(){
-    $pDescription = file_get_contents('http://loripsum.net/api/1/short/plaintext');
+    $pDescription = file_get_contents('http://loripsum.net/api/1/long/plaintext');
     return $pDescription;
 }
 
@@ -189,7 +209,7 @@ function generatePrice($minPrice, $maxPrice){
 }
 
 /* Generate Names, Categories, Subcategories, Attributes */
-function generateNames($theme, $attributes, $subattributes){
+function generateNames($theme, $attributes, $subattributes, $imagecount){
     /** Name - Category - Subcategory */
     $listNames = array();
     $listAttr = array();
@@ -219,12 +239,12 @@ function generateNames($theme, $attributes, $subattributes){
     $input = $listNames[$key]["Images"];
     $rand_keys = array_rand($input, 4);
     $pImagesGallery = NULL;
-    for($i = 0; $i <= 3; $i++){
-        if($i == 3){
-            $pImagesGallery .= $input[$rand_keys[$i]] . '.jpg';
+    for($i = 0; $i < $imagecount; $i++){
+        if($i == $imagecount - 1){
+            $pImagesGallery .= 'https://www.lucaschaplain.design/tools/woocsvgen/data/' . $theme . '/img/' . $input[$rand_keys[$i]] . '.jpg';
         }
         else {
-            $pImagesGallery .= $input[$rand_keys[$i]] . '.jpg, ';
+            $pImagesGallery .= 'https://www.lucaschaplain.design/tools/woocsvgen/data/' . $theme . '/img/' . $input[$rand_keys[$i]] . '.jpg, ';
         }
     }
 
@@ -286,97 +306,7 @@ function generateNames($theme, $attributes, $subattributes){
     return $arrayProduct;
 }
 
-function generateCategories($theme){
-    if($theme == "alimentation"){
-        $listCategories = array(
-            "Vins",
-            "Mousseux",
-            "Boissons sucrées",
-            "Thés",
-            "Alcools légers",
-            "Spiritueux"
-        );
-        $key = array_rand($listCategories);
-        $pCategories = $listCategories[$key];
-        if (mt_rand(0, 2) == 1){
-            $listSubCategories = array(
-                "Bio",
-                "Sans sulfites",
-                "Vegan",
-                "AOP",
-                "AOC"
-            );
-            $key = array_rand($listSubCategories);
-            $pSubCategories = $listSubCategories[$key];
-
-            $pCategories .= ' > ' . $pSubCategories;
-        }
-    }
-    elseif ($theme == "vetements"){
-        $listCategories = array(
-            "Chaussettes",
-            "Combinaisons",
-            "T-shirts",
-            "Débardeurs",
-            "Robes",
-            "Jupes",
-            "Chaussures",
-            "Bottines",
-            "Sous-vêtements",
-            "Pantalons",
-            "Chemises",
-            "Bonnets"
-        );
-        $key = array_rand($listCategories);
-        $pCategories = $listCategories[$key];
-        if (mt_rand(0, 2) == 1){
-            $listSubCategories = array(
-                "Femme",
-                "Enfant",
-                "Homme",
-                "Mixte"
-            );
-            $key = array_rand($listSubCategories);
-            $pSubCategories = $listSubCategories[$key];
-
-            $pCategories .= ' > ' . $pSubCategories;
-        }
-    }
-    elseif ($theme == "bijoux"){
-        $listCategories = array(
-            "Bague",
-            "Colliers",
-            "Bracelets",
-            "Chaînes",
-            "Pendentifs",
-            "Boucles",
-            "Serre-têtes",
-            "Montres",
-            "Épingles",
-            "Boutons de manchette",
-            "Piercings",
-            "Diadèmes"
-        );
-        $key = array_rand($listCategories);
-        $pCategories = $listCategories[$key];
-        if (mt_rand(0, 2) == 1){
-            $listSubCategories = array(
-                "Femme",
-                "Enfant",
-                "Homme",
-                "Mixte"
-            );
-            $key = array_rand($listSubCategories);
-            $pSubCategories = $listSubCategories[$key];
-
-            $pCategories .= ' > ' . $pSubCategories;
-        }
-    }
-
-    return $pCategories;
-}
-
-function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $pComments, $minPrice, $maxPrice, $attributes, $subattributes, $limit){
+function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $pComments, $minPrice, $maxPrice, $attributes, $subattributes, $imagecount, $limit){
 
     for($i = 1; $i <= $limit; $i++){
 
@@ -392,15 +322,18 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
         }
 
         // Random product name with its associated category and attributes
-        $product = generateNames($pTheme, $attributes, $subattributes);
+        $product = generateNames($pTheme, $attributes, $subattributes, $imagecount);
 
         // Generate Collections names ?
         isset($_POST["generatecollections"]) ? $generateCollections = " « " . generateProductCollection(6) . " »" : $generateCollections = NULL;
 
+        // ---------------------------------------------------------------------- //
+        // Generate main data array --------------------------------------------- //
+        // ---------------------------------------------------------------------- //
         $array[] = array(
             "ID" => "$i",
             "Type" => utf8_encode(generateType($pType)),
-            "SKU" => utf8_encode(generateSku()),
+            "SKU" => utf8_encode(generateSku($product["pName"])),
             "Name" =>  $product["pName"] . $generateCollections,
             "Published" => "1",
             "Is featured?" => "0",
@@ -451,7 +384,123 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
             "Download 2 URL" => NULL
         );
     }
-    // arrayToJson($array);
-    // jsonToCSV("results.json", "products.csv");
-    return $array;
+
+    // Generate variations ...
+    foreach ($array as $item){
+
+        // ... only if product is 'variable' type
+        if ($item["Type"] == "variable"){
+
+            // Attributes and values
+            $attrValues = explode(', ', $item["Attribute 1 value(s)"]);
+            $countAttrValues = count($attrValues);
+
+            // Generate id for variable product item (variations are 4 digits id)
+            $idVar = mt_rand(1111, 9999);
+
+            // Get a random image from product image gallery
+            $pImages = explode(', ', $item["Images"]);
+            $productImagesArray = array();
+            foreach ($pImages as $pImage){
+                $productImagesArray[] = $pImage;
+            }
+            $randImage = array_rand($productImagesArray);
+
+            for ($i = 0; $i < $countAttrValues; $i++){
+
+                // Increment id to get ids for variations that follows for same product
+                $idVar++;
+
+                // ---------------------------------------------------------------------- //
+                // Insert the variation into existing main array ------------------------ //
+                // ---------------------------------------------------------------------- //
+                $array[] = array(
+                    "ID" => "$idVar",
+                    "Type" => "variation",
+                    "SKU" => utf8_encode( $item["SKU"] . '-' . strtolower(stripBadChars($attrValues[$i]))),
+                    "Name" =>  $item["Name"] . ' - ' . $attrValues[$i],
+                    "Published" => "1",
+                    "Is featured?" => "0",
+                    "Visibility in catalog" => $item["Visibility in catalog"],
+                    "Short description" => $item["Short description"],
+                    "Description" => $item["Description"],
+                    "Date sale price starts" => NULL,
+                    "Date sale price ends" => NULL,
+                    "Tax status" => "taxable",
+                    "Tax class" => NULL,
+                    "In stock?" => $item["In stock?"],
+                    "Stock" => NULL,
+                    "Backorders allowed?" => "0",
+                    "Sold individually?" => "0",
+                    "Weight (lbs)" => NULL,
+                    "Length (in)" => NULL,
+                    "Width (in)" => NULL,
+                    "Height (in)" => NULL,
+                    "Allow customer reviews?" => "0",
+                    "Purchase note" => NULL,
+                    "Sale price" => $item["Sale price"],
+                    "Regular price" => $item["Regular price"],
+                    "Categories" => NULL,
+                    "Tags" => NULL,
+                    "Shipping class" =>  NULL,
+                    "Images" => $productImagesArray[$randImage],
+                    "Download limit" => NULL,
+                    "Download expiry days" => NULL,
+                    "Parent" => $item["SKU"],
+                    "Grouped products" => NULL,
+                    "Upsells" => NULL,
+                    "Cross-sells" => NULL,
+                    "External URL" => NULL,
+                    "Button text" => NULL,
+                    "Position" => "0",
+                    "Attribute 1 name" => $item["Attribute 1 name"],
+                    "Attribute 1 value(s)" => $attrValues[$i],
+                    "Attribute 1 visible" => NULL,
+                    "Attribute 1 global" => "1",
+                    "Attribute 2 name" => $item["Attribute 2 name"],
+                    "Attribute 2 value(s)" => NULL,
+                    "Attribute 2 visible" => NULL,
+                    "Attribute 2 global" => "1",
+                    "Meta: _wpcom_is_markdown" => "1",
+                    "Download 1 name" => NULL,
+                    "Download 1 URL" => NULL,
+                    "Download 2 name" => NULL,
+                    "Download 2 URL" => NULL
+                );
+            }
+        }
+    }
+
+    // Generate random number for CSV file
+    $instance = mt_rand(1000, 9999);
+
+    // Directory where CSV file exists
+    $baseUrl = "https://";
+    $baseUrl .= $_SERVER['HTTP_HOST'];
+    $baseUrl .= "/tools/woocsvgen/";
+
+    // Generate JSON from array (will be deleted)
+    arrayToJson($array, $instance);
+    // Generate CSV from JSON just created
+    jsonToCSV('results-' . $instance . '.json', 'products-' . $instance . '.csv');
+    $fileUrl = $baseUrl . 'products-' . $instance . '.csv';
+    header('Location:' . $fileUrl);
+
+    // Script to delete old files runs every time a CSV is generated
+    $folderName = basename(__DIR__);
+    // Delete JSON files after 24 hours
+    foreach (glob($folderName."*.json") as $file){
+        if(time() - filectime($file) > 86400){
+            unlink($file);
+        }
+    }
+    // Delete CSV files after 24 hours
+    foreach (glob($folderName."*.csv") as $file){
+        if(time() - filectime($file) > 86400){
+            unlink($file);
+        }
+    }
+
+    /* Uncomment for debugging */
+    // return $array;
 }
