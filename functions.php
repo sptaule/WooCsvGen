@@ -308,6 +308,9 @@ function generateNames($theme, $attributes, $subattributes, $imagecount){
 
 function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $pComments, $minPrice, $maxPrice, $attributes, $subattributes, $imagecount, $limit){
 
+    $shortdesc = generateShortDescription();
+    $longdesc = generateDescription();
+
     for($i = 1; $i <= $limit; $i++){
 
         // Product price
@@ -338,8 +341,8 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
             "Published" => "1",
             "Is featured?" => "0",
             "Visibility in catalog" => utf8_encode(generateVisibility($pVisibility)),
-            "Short description" => generateShortDescription(),
-            "Description" => utf8_encode(generateDescription()),
+            "Short description" => utf8_encode($shortdesc),
+            "Description" => utf8_encode($longdesc),
             "Date sale price starts" => NULL,
             "Date sale price ends" => NULL,
             "Tax status" => "taxable",
@@ -481,10 +484,14 @@ function globalGenerate($pTheme, $pType, $pVisibility, $pStock, $pDimensions, $p
 
     // Generate JSON from array (will be deleted)
     arrayToJson($array, $instance);
+
     // Generate CSV from JSON just created
     jsonToCSV('results-' . $instance . '.json', 'products-' . $instance . '.csv');
+
     $fileUrl = $baseUrl . 'products-' . $instance . '.csv';
-    header('Location:' . $fileUrl);
+    $_SESSION["user"]["file"]["name"] = 'products-' . $instance;
+    $_SESSION["user"]["file"]["time"] = date('H:i');
+    header('Location:' . $baseUrl);
 
     // Script to delete old files runs every time a CSV is generated
     $folderName = basename(__DIR__);

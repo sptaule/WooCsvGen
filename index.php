@@ -1,5 +1,11 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+session_start();
+
 include 'functions.php';
 
 header('Content-Type: text/html; charset=utf-8');
@@ -229,8 +235,17 @@ if(isset($_POST["generate"])){
 
 			  <div class="Btn">
 				  	<div class="control">
-						<input type="submit" class="submit-button button is-primary" name="generate" value="Générer mon .csv">
+						<input type="submit" id="generate-btn" class="submit-button button is-primary" name="generate" value="Générer mon .csv">
 					</div>
+			  </div>
+
+			  <div class="Loading" style="display: flex;flex-direction: column;justify-content: center;">
+			  		<div id="loader" class="control">
+				  		<img src="style/loading.svg" width="200px" style="margin: auto; display: block;">
+					</div>
+					<?php if(isset($_SESSION["user"]["file"]["name"]) && $_SESSION["user"]["file"]["name"] != NULL): ?>
+			  			<a id="dl-link" href="https://www.lucaschaplain.design/tools/woocsvgen/<?= $_SESSION["user"]["file"]["name"]; ?>.csv" title="<?php echo $_SESSION["user"]["file"]["name"] . ' - ' . $_SESSION["user"]["file"]["time"]; ?>" style="text-align: center; color: pink; font-size: 1.75em; font-weight: bold;">Télécharger</a>
+				  	<?php endif; ?>
 			  </div>
 
 			</div>
@@ -245,6 +260,13 @@ if(isset($_POST["generate"])){
         </div>
 
 	</div>
+
+	<script>
+		$("#generate-btn").click(function(){
+			$("#dl-link").css("display", "none");
+			$("#loader").css("display", "block");
+		});
+	</script>
 
 <script src="script/script.js"></script>
 	

@@ -76,6 +76,8 @@ h2{
   text-shadow: 0 0 30px #1f1c2c !important;
 }
 
+#loader{ display: none; }
+
 /* The container */
 .container {
   display: block;
@@ -240,7 +242,7 @@ h2{
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 150px repeat(2, 1fr);
   gap: 10px 10px;
-  grid-template-areas: "Logo Logo Logo Theme" "Type Visibility Stock Dimensions" "Commentaires Prix Categories Attributs" "Gallery Qty Btn .";
+  grid-template-areas: "Logo Logo Logo Theme" "Type Visibility Stock Dimensions" "Commentaires Prix Categories Attributs" "Gallery Qty Btn Loading";
 }
 
 @media screen and (max-width: 1120px){
@@ -249,7 +251,7 @@ h2{
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 150px repeat(6, 1fr);
     gap: 10px 10px;
-    grid-template-areas: "Logo Theme" "Type Visibility" "Stock Dimensions" "Commentaires Prix" "Categories Attributs" "Gallery Qty" "Btn .";
+    grid-template-areas: "Logo Theme" "Type Visibility" "Stock Dimensions" "Commentaires Prix" "Categories Attributs" "Gallery Qty" "Btn Loading";
     }
 }
 
@@ -299,3 +301,5 @@ h2{
 .Qty { grid-area: Qty; }
 
 .Btn { grid-area: Btn; }
+
+.Loading { grid-area: Loading; }
