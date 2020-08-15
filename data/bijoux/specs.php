@@ -142,7 +142,7 @@ $listNames = array(
         "Subcategory" => "Acier",
         "Images" => array(
             "mon01", "mon02", "mon03", "mon04", "mon05", "mon06", "mon07", "mon08", "mon09", "mon10",
-            "mon11", "mon012", "mon13", "mon14", "mon15", "mon16", "mon17", "mon18", "mon19", "mon20",
+            "mon11", "mon12", "mon13", "mon14", "mon15", "mon16", "mon17", "mon18", "mon19", "mon20",
         )
     ),
     array(
@@ -159,12 +159,12 @@ $listNames = array(
         "Category" => "Bijoux femme",
         "Subcategory" => "Acier",
         "Images" => array(
-            "col01", "col02", "col03", "col04", "col05", "col06", "col07", "col08", "col09", "col10",
-            "col11", "col012", "col13", "col14", "col15", "col16", "col17", "col18", "col19", "col20",
+            "bra01", "bra02", "bra03", "bra04", "bra05", "bra06", "bra07", "bra08", "bra09", "bra10",
+            "bra11", "bra012", "bra13", "bra14", "bra15", "bra16", "bra17", "bra18", "bra19", "bra20",
         )
     ),
     array(
-        "Name" => "Épingle à cheveux",
+        "Name" => "Epingle à cheveux",
         "Category" => "Accessoires",
         "Subcategory" => "Acier",
         "Images" => array(
