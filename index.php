@@ -27,7 +27,7 @@ if(isset($_POST["generate"])){
 <html lang="fr">
 <head>
 	<meta charset="UTF-8">
-	<title>Coucou</title>
+	<title>WooCsvGen - Générateur CSV de produits WooCommerce</title>
 	<link rel="stylesheet" href="style/style.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
 	<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;500;800&display=swap" rel="stylesheet">
