@@ -5,7 +5,7 @@ CSV products generator for WooCommerce
 
 **Supported languages** : French
 
-![screenshot](https://i.imgur.com/0wD4iqB.jpg)
+![screenshot](https://i.imgur.com/Ew7i5Hn.jpg)
 
 ---
 
