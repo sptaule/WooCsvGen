@@ -1,7 +1,5 @@
 <?php
 
-include 'db.php';
-
 include 'functions.php';
 
 header('Content-Type: text/html; charset=utf-8');
@@ -19,7 +17,8 @@ if(isset($_POST["generate"])){
 	$subattributes = htmlspecialchars($_POST["sousattributs"]);
 	$imagecount = htmlspecialchars($_POST["imagecount"]);
 	$qty = htmlspecialchars($_POST["productqty"]);
-    var_dump(globalGenerate($theme, $type, $visibility, $stock, $dimensions, $comments, $minprice, $maxprice, $attributes, $subattributes, $qty));
+    // var_dump(globalGenerate($theme, $type, $visibility, $stock, $dimensions, $comments, $minprice, $maxprice, $attributes, $subattributes, $imagecount, $qty));
+    globalGenerate($theme, $type, $visibility, $stock, $dimensions, $comments, $minprice, $maxprice, $attributes, $subattributes, $imagecount, $qty);
 }
 
 ?>
@@ -75,13 +74,13 @@ if(isset($_POST["generate"])){
 					  <input type="radio" checked="checked" name="producttype" value="simple">
 					  <span class="checkmark"></span>
 					</label>
-					<label class="container">Simple et variable
+					<label class="container">Simple et variable (avec variations)
 					  <input type="radio" name="producttype" value="simplevariable">
 					  <span class="checkmark"></span>
 					</label>
 					<div id="collections">
-						<h2 class="mt-4">Collections</h2>
-						<label class="container-checkbox">Générer des noms de collections
+						<h2 class="mt-4">Noms des produits</h2>
+						<label class="container-checkbox">Générer des noms de collections <br><small>(exemple <?= '« ' . generateProductCollection(6) . ' »'; ?>)</small>
 							<input type="checkbox" checked="checked" name="generatecollections">
 							<span class="checkmark-box"></span>
 						</label>
@@ -202,10 +201,10 @@ if(isset($_POST["generate"])){
 
 			  <div class="Attributs">
 			  	<section>
-					<h2>Attributs</h2>
+					<h2>Attributs <small>(par produit)</small></h2>
 					<input id="range-attr-1" type="range" min="0" max="2" step="1" value="1" name="attributs">
 					<span class="pricevalue attrvalue">1</span>
-					<h2>Valeurs</h2>
+					<h2>Valeurs <small>(par attribut)</small></h2>
 					<input id="range-attr-2" type="range" min="0" max="5" step="1" value="3" name="sousattributs">
 					<span class="pricevalue subattrvalue">3</span>
 				</section>
@@ -215,8 +214,8 @@ if(isset($_POST["generate"])){
                     <section>
                         <h2>Images des produits</h2>
                         <span class="container-checkbox" style="padding-left: 0;">Nombre de photos par produit</span>
-                        <input id="range-imagecount" type="range" min="0" max="4" step="1" value="2" name="imagecount">
-                        <span class="imagecountvalue pricevalue subattrvalue">2</span>
+                        <input id="range-imagecount" type="range" min="0" max="4" step="1" value="3" name="imagecount">
+                        <span class="imagecountvalue pricevalue subattrvalue">3</span>
                     </section>
                 </div>
 
