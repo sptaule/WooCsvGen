@@ -9,6 +9,12 @@ CSV products generator for WooCommerce
 
 ---
 
+### Where can I try it out
+
+Here is the [link](https://www.lucaschaplain.design/tools/woocsvgen/)
+
+---
+
 ### How to use
 
 * __Select a theme__
