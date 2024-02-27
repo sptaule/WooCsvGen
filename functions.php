@@ -46,13 +46,11 @@ function generateProductCollection($length){
         'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 
         'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
     );  
-    // Seed it
-    srand((double) microtime() * 1000000);
+    mt_srand();
     $max = $length/2;
-    for ($i = 1; $i <= $max; $i++)
-    {
-        $string .= $consonnes[rand(0,19)];
-        $string .= $voyelles[rand(0,4)];
+    for ($i = 1; $i <= $max; $i++) {
+        $string .= $consonnes[mt_rand(0,19)];
+        $string .= $voyelles[mt_rand(0,4)];
     }
     return ucfirst($string);
 }
